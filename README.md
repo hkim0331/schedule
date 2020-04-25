@@ -213,8 +213,10 @@ timestamp はデータを入れた時間。混同しないように。
 (main)
 ```
 
+---
+### new/create, delete, update
 
+ソースコード読むべし。
 
-
-
+リリース 1.1.0.
 
