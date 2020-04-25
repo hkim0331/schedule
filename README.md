@@ -1,4 +1,4 @@
-2020-04-24
+2020-04-24, 2020-04-25
 # <span style='color:red;'>UNDER CONSTRUCTION</span>
 
 ## Schedule
@@ -110,7 +110,7 @@ INSERT INTO schedule (user_id, date, brief, detail)
 $ sqlite3 schedule.db < seed.sql
 ```
 ---
-###(オプショナル)
+### (オプショナル)
 
 開発中は、何度も sqlite3 ... をタイプすることになる。
 タイプがめんどくさいので次の内容でファイル Makefile を作る。
@@ -179,5 +179,42 @@ date じゃどっちのイベントの前後がわからない。
 1. seed.sql に日付を入れる。
 
 timestamp はデータを入れた時間。混同しないように。
+
+---
+### コマンドライン引数 (2020-04-25 はここから)
+
+* リッスンするポートをコマンドラインで指定できるようにする。
+* 引数が与えられない時、デフォルト値をとるように。
+
+マニュアルには、
+
+```racket
+(current-command-line-arguments) → (vectorof (and/c string immutable?))
+```
+
+コマンドラインの引数として受け取るデータは文字列、
+関数 start が期待する引数 port は整数なので、
+文字列を整数に変換すること(string->number)を忘れないこと。
+
+```racket
+(define start
+  (lambda (port)
+    (println (format "schedule will start at port ~a" port))))
+    (run #:port port #:listen-ip #f)))
+
+(define main
+  (lambda ()
+    (let ((args (current-command-line-arguments))
+          (port 3003))
+      (for ([i (range 0 (vector-length args) 2)])
+        (when (string=? (vector-ref args i) "-p")
+          (set! port (string->number (vector-ref args (+ i 1))))
+      (start port))))
+(main)
+```
+
+
+
+
 
 

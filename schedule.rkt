@@ -64,10 +64,7 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 <p class='event'><a href='/detail?id=~a'>~a</a></p>"
 date id brief))))
 
-(define start
-  (lambda (port)
-    (println (format "will start on port ~a\n" port)
-    (run #:port port #:listen-ip #f))))
+
 
 (define new-button
   (lambda ()
@@ -129,4 +126,18 @@ date id brief))))
               under-construction
               "<p><a href='/'>back</a>"))))
 
-(start 3003)
+(define start
+  (lambda (port)
+    (println (format "schedule will start at port ~a" port))
+    (run #:port port #:listen-ip #f)))
+
+(define main
+  (lambda ()
+    (let ((args (current-command-line-arguments))
+          (port 3003))
+      (for ([i (range 0 (vector-length args) 2)])
+        (when (string=? (vector-ref args i) "-p")
+          (set! port (string->number (vector-ref args (+ i 1))))))
+      (start port))))
+
+(main)
