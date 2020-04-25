@@ -3,14 +3,22 @@
 ## Unreleased
 
 - 不正な入力（日付とか）を排除する。
-- bump-version スクリプト。
-- せっかく通った undercon-struction に働き場所を。
+- restart script
+
+## [1.1.2] - 2020-04-25
+### Added
+- link to github
+
+### Security
+- gitignore schedule.db
+
 
 ## [1.1.0] - 2020-04-25
 ### Added
-- post /update
-- post /delete
-- get /new, post /create
+- post '/update'
+- post '/delete'
+- post '/create'
+- get '/new'
 - コマンドライン引数をとる。-p 4000 で 4000/tcp でリッスン。
 
 
