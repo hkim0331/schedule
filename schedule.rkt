@@ -3,7 +3,7 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.1.1")
+(define VERSION "1.1.2")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
@@ -37,7 +37,8 @@
 
 (define footer
   (format "<hr>
-hiroshi.kimura.0331@gmail.com, ~a.
+hiroshi.kimura.0331@gmail.com,
+<a href='https://github.com/hkim0331/schedule.git'>~a</a>.
 </div>
 </body>
 <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7\
