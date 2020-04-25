@@ -4,7 +4,7 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.0.1")
+(define VERSION "1.1.0")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
