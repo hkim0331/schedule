@@ -1,10 +1,9 @@
 #lang racket
-;; [version 1] - 2020-04-24
 
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.1.0")
+(define VERSION "1.1.1")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
