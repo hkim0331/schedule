@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- 不正な入力（日付とか）を排除する。
+- bump-version スクリプト。
+- せっかく通った undercon-struction に働き場所を。
 
 ## [1.1.0] - 2020-04-25
 ### Added
