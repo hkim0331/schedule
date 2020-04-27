@@ -3,13 +3,9 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.1.2")
+(define VERSION "1.2.0")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
-
-;; version 1.
-;; 文字列のリストを引数にとり、それを一本の文字列につないで、
-;; 戻り値とする。この設計はいいのか悪いのか。。。
 
 (define under-construction
   "<p style='font-size:24pt; color:red;'>UNDER CONSTRUCTION🔥</p>")
@@ -29,6 +25,8 @@
   input.date  {width: 200px;}
   input.brief {width: 200px;}
   textarea.detail {width:300px; height:200px;}
+  div.sql {margin-bottom:1ex;}
+  textarea.sql {width:400px;}
 </style>
 </head>
 <body>
@@ -51,21 +49,23 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 /script>
 </html>" VERSION))
 
+;; version 1.
+;; 文字列のリストを引数にとり、それを一本の文字列につないで、
+;; 戻り値とする。この設計はいいのか悪いのか。。。
+
 (define html
   (lambda (ss)
-    (string-append header
-                   (string-join ss)
-                   footer)))
+    (string-append header (string-join ss) footer)))
 
 (define format-schedule
   (lambda (r)
     (let ((id (vector-ref r 0))
           (date (vector-ref r 2))
           (brief  (vector-ref r 3)))
-    (format "<hr><p class='date'>~a<p>
+      (format
+        "<hr><p class='date'>~a<p>
 <p class='event'><a href='/detail?id=~a'>~a</a></p>"
-date id brief))))
-
+        date id brief))))
 
 
 (define new-button
@@ -78,7 +78,20 @@ date id brief))))
       onsubmit=\"return confirm('want to delete?')\">
       <input type='hidden' name='id' value='~a'>
       <input type='submit' value='delete' class='btn btn-danger'>"
-      n)))
+            n)))
+
+(define div-sql
+  (lambda ()
+    "<div class='sql'>
+<form method='post' action='/sql'>
+<textarea name='sql' class='sql'></textarea><br>
+<input type='submit' value='exec' class='btn btn-danger'>
+</form></div><hr>"))
+
+(post "/sql"
+  (lambda (req)
+    (query-exec DB (params req 'sql))
+    "<p>check the result&rArr;<a href='/'>🐸</a>"))
 
 (get "/hello"
      (lambda ()
@@ -86,20 +99,23 @@ date id brief))))
               "<p>Hello Racket</p>"
               "<p>Nice to meet you</p>"))))
 
+;; (cons (cons ...) はぶざま
 (get "/"
      (lambda ()
        (let* ((q "select * from schedule order by datetime")
               (ret (query-rows DB q)))
          (html
-          (cons
-            (new-button)
-            (for/list ([r ret])
-                         (format-schedule r)))))))
+          (cons (div-sql)
+            (cons (new-button)
+              (for/list ([r ret])
+                          (format-schedule r))))))))
 
 (get "/detail"
      (lambda (req)
-       (let* ((q (format "select id, datetime, brief, detail from schedule where id='~a'"
-                         (params req 'id)))
+       (let* ((q
+               (format
+                "select id, datetime, brief, detail from schedule where id='~a'"
+                (params req 'id)))
               (r (query-row DB q))
               (id (vector-ref r 0))
               (da (vector-ref r 1))
@@ -108,6 +124,7 @@ date id brief))))
          (html (list
                 "<form method='post' action='/update'>"
                 (format "<input type='hidden' name='id' value='~a'>" id)
+                (format "<p>ID: ~a" id)
                 (format "<p>日付:<input name='datetime' value='~a'></p>" da)
                 (format "<p>短く:<input name='brief' value='~a'></p>" br)
                 (format "<p>詳しく:<br><textarea name='detail' class='detail'>~a</textarea></p>" de)
@@ -151,16 +168,18 @@ date id brief))))
 
 (post "/update"
       (lambda (req)
-        (let ((q (format "update schedule set datetime ='~a', brief='~a', detail='~a' where id='~a'"
-            (params req 'datetime)
-            (params req 'brief)
-            (params req 'detail)
-            (params req 'id))))
-         ;;(println q)
-         (query-exec DB q)
-         (html (list
-               "<h3>アップデートできたかな？</h3>"
-               "<p><a href='/'>back</a>")))))
+        (let ((q
+               (format
+                "update schedule set datetime ='~a', brief='~a', detail='~a' where id='~a'"
+                (params req 'datetime)
+                (params req 'brief)
+                (params req 'detail)
+                (params req 'id))))
+          ;;(println q)
+          (query-exec DB q)
+          (html (list
+                 "<h3>アップデートできたかな？</h3>"
+                 "<p><a href='/'>back</a>")))))
 
 
 (define start

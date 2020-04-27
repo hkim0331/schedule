@@ -1,5 +1,5 @@
 run:
-	racket schedule.rkt
+	racket schedule.rkt -p 3001
 
 init:
 	sqlite3 schedule.db < create.sql
