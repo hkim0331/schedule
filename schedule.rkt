@@ -3,7 +3,7 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.2.1")
+(define VERSION "1.3.0")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
@@ -52,7 +52,6 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 ;; version 1.
 ;; 文字列のリストを引数にとり、それを一本の文字列につないで、
 ;; 戻り値とする。この設計はいいのか悪いのか。。。
-
 (define html
   (lambda (ss)
     (string-append header (string-join ss) footer)))
@@ -80,18 +79,44 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
       <input type='submit' value='delete' class='btn btn-danger'>"
             n)))
 
+(define my-number->string
+  (lambda (lst)
+    (map (lambda (x) (if (number? x) (number->string x) x))
+         lst)))
+
+(define tr
+  (lambda (vs)
+    (let ((len (vector-length (first vs))))
+      (string-join
+        (my-number->string
+          (flatten
+            (for/list ([row vs])
+              (list
+                "<tr>"
+                (for/list ([i (range len)])
+                  (list
+                    "<td>"
+                    (vector-ref row i)
+                    "</td>"))
+                "</tr>"))))))))
+
 (define div-sql
   (lambda ()
     "<div class='sql'>
 <form method='post' action='/sql'>
 <textarea name='sql' class='sql'></textarea><br>
-<input type='submit' value='exec' class='btn btn-danger'>
+<input type='submit' value='query' class='btn btn-danger'>
 </form></div><hr>"))
 
 (post "/sql"
   (lambda (req)
-    (query-exec DB (params req 'sql))
-    "<p>check the result&rArr;<a href='/'>🐸</a>"))
+    (let ((ret (query-rows DB (params req 'sql))))
+      (html (list
+        "<h2>RESULT</h2>"
+        "<table>"
+        (tr ret)
+        "</table>"
+        "<p>🐸<a href='/'>かえる</a>")))))
 
 (get "/hello"
      (lambda ()
