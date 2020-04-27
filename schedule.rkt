@@ -3,7 +3,7 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.3.0")
+(define VERSION "1.3.1")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
@@ -66,7 +66,6 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 <p class='event'><a href='/detail?id=~a'>~a</a></p>"
         date id brief))))
 
-
 (define new-button
   (lambda ()
     (format "<p><a href='/new' class='btn btn-primary'>new</a>")))
@@ -106,17 +105,41 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 <form method='post' action='/sql'>
 <textarea name='sql' class='sql'></textarea><br>
 <input type='submit' value='query' class='btn btn-danger'>
-</form></div><hr>"))
+</form><br>
+<p><a href='/reset' class='btn btn-danger'>Reset DB</a>
+エラーになっても気にすんな。ブラウザのバックで戻って再読み込み💪
+</div>
+<hr>"))
 
 (post "/sql"
   (lambda (req)
     (let ((ret (query-rows DB (params req 'sql))))
-      (html (list
-        "<h2>RESULT</h2>"
-        "<table>"
-        (tr ret)
-        "</table>"
-        "<p>🐸<a href='/'>かえる</a>")))))
+      (if (null? ret)
+        (html
+          (list
+            "<h2>EMPTY</h2>"
+            "<p>🐸<a href='/'>かえる</a>"))
+        (html
+         (list
+          "<h2>RESULT</h2>"
+          "<table>"
+          (tr ret)
+          "</table>"
+          "<p>🐸<a href='/'>かえる</a>"))))))
+
+;; must use post
+(get "/reset"
+  (lambda ()
+    (let ((pwd (getenv "PWD")))
+      (println pwd)
+      (and
+        (system
+          (format"/usr/bin/sqlite3 ~a/schedule.db < ~a/create.sql"
+            pwd pwd))
+        (system
+          (format "/usr/bin/sqlite3 ~a/schedule.db < ~a/seed.sql"
+            pwd pwd))
+      "OK"))))
 
 (get "/hello"
      (lambda ()

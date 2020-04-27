@@ -3,21 +3,24 @@
 ## Unreleased
 
 - 不正な入力（日付とか）を排除する。
-- restart script
+
+## [1.3.1] - 2020-04-27
+- エラーになっても気にすんな。ブラウザのバックで戻って再読み込み💪
+- select がヒットしない時でもエラーを出さない。
 
 ## [1.3.0] - 2020-04-27
 ### Changed
--- SQL の結果を取得し、HTML のテーブルに表示する。
+- SQL の結果を取得し、HTML のテーブルに表示する。
 
 ## [1.2.1] - 2020-04-27
 ### Added
--- SQL を実行できるように。
--- s18.melt に BASIC 認証。
+- SQL を実行できるように。
+- s18.melt に BASIC 認証。
 
 
 ### Change
--- Makefile: seed は init に依存する。
--- Makefile: run は -p <port> オプション付きで起動する。
+- Makefile: seed は init に依存する。
+- Makefile: run は -p &lt;port> オプション付きで起動する。
 
 
 ## [1.1.2] - 2020-04-25
