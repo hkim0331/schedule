@@ -5,6 +5,17 @@
 - 不正な入力（日付とか）を排除する。
 - restart script
 
+## [1.2.1] - 2020-04-27
+### Added
+-- SQL を実行できるように。
+-- s18.melt に BASIC 認証。
+
+
+### Change
+-- Makefile: seed は init に依存する。
+-- Makefile: run は -p <port> オプション付きで起動する。
+
+
 ## [1.1.2] - 2020-04-25
 ### Added
 - link to github
