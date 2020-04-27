@@ -25,6 +25,8 @@
   input.date  {width: 200px;}
   input.brief {width: 200px;}
   textarea.detail {width:300px; height:200px;}
+  div.sql {margin-bottom:1ex;}
+  textarea.sql {width:400px;}
 </style>
 </head>
 <body>
@@ -60,9 +62,10 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
     (let ((id (vector-ref r 0))
           (date (vector-ref r 2))
           (brief  (vector-ref r 3)))
-      (format "<hr><p class='date'>~a<p>
+      (format
+        "<hr><p class='date'>~a<p>
 <p class='event'><a href='/detail?id=~a'>~a</a></p>"
-              date id brief))))
+        date id brief))))
 
 
 (define new-button
@@ -77,21 +80,35 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
       <input type='submit' value='delete' class='btn btn-danger'>"
             n)))
 
+(define div-sql
+  (lambda ()
+    "<div class='sql'>
+<form method='post' action='/sql'>
+<textarea name='sql' class='sql'></textarea><br>
+<input type='submit' value='exec' class='btn btn-danger'>
+</form></div><hr>"))
+
+(post "/sql"
+  (lambda (req)
+    (query-exec DB (params req 'sql))
+    "<p>check the result&rArr;<a href='/'>🐸</a>"))
+
 (get "/hello"
      (lambda ()
        (html (list
               "<p>Hello Racket</p>"
               "<p>Nice to meet you</p>"))))
 
+;; (cons (cons ...) はぶざま
 (get "/"
      (lambda ()
        (let* ((q "select * from schedule order by datetime")
               (ret (query-rows DB q)))
          (html
-          (cons
-            (new-button)
-            (for/list ([r ret])
-                         (format-schedule r)))))))
+          (cons (div-sql)
+            (cons (new-button)
+              (for/list ([r ret])
+                          (format-schedule r))))))))
 
 (get "/detail"
      (lambda (req)
@@ -107,6 +124,7 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
          (html (list
                 "<form method='post' action='/update'>"
                 (format "<input type='hidden' name='id' value='~a'>" id)
+                (format "<p>ID: ~a" id)
                 (format "<p>日付:<input name='datetime' value='~a'></p>" da)
                 (format "<p>短く:<input name='brief' value='~a'></p>" br)
                 (format "<p>詳しく:<br><textarea name='detail' class='detail'>~a</textarea></p>" de)
