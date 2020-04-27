@@ -1,4 +1,4 @@
-2020-04-24, 2020-04-25
+2020-04-24, 2020-04-25, 2020-04-27
 # <span style='color:red;'>UNDER CONSTRUCTION🔥</span>
 
 ## Schedule
