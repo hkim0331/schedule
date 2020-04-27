@@ -1,3 +1,4 @@
+delete * from schedule;
 INSERT INTO schedule (user_id, datetime, brief, detail)
   values
   (1, "2020-04-24 12:34:00", "デート",  "待ち合わせは九工大です。ガッツだなあ。"),
