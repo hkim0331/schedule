@@ -103,7 +103,7 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
   (lambda ()
     "<div class='sql'>
 <form method='post' action='/sql'>
-<textarea name='sql' class='sql'></textarea><br>
+<textarea name='sql' class='sql'>select * from schedule;</textarea><br>
 <input type='submit' value='query' class='btn btn-danger'>
 </form><br>
 <p><a href='/reset' class='btn btn-danger'>Reset DB</a>

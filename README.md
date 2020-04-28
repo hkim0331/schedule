@@ -1,4 +1,4 @@
-2020-04-24, 2020-04-25
+2020-04-24, 2020-04-25, 2020-04-27
 # <span style='color:red;'>UNDER CONSTRUCTION🔥</span>
 
 ## Schedule
@@ -62,8 +62,18 @@ ___
 Sqlite3 は敷居が低く、学習に絶好だ。MacOS には最初から入ってる。
 
 ```
+$ /usr/bin/sqlite3
+```
+
+あるいは、
+
+```
 $ sqlite3
 ```
+
+（4年生は /usr/bin/sqlite3 を短く sqlite3 とタイプで起動できる理由を
+たぶん、
+知らない。）
 
 ---
 ### データベースを定義する
@@ -138,7 +148,7 @@ $ sqlite3 schedule.db < seed.sql
 init:
   sqlite3 schedule.db < create.sql
 
-seed:
+seed: init
   sqlite3 schedule.db < seed.sql
 ```
 
@@ -180,7 +190,7 @@ $ raco pkg install https://github.com/dmac/spin.git
 ```
 
 ブラウザで http://localhost:3000/ を開いてみる。
-止める時は Racket の右上の🟥。
+止める時は Racket の右上の 🟥 。
 
 ---
 ### 設計変更
@@ -205,7 +215,7 @@ timestamp はデータを入れた時間。混同しないように。
 * リッスンするポートをコマンドラインで指定できるようにする。
 * 引数が与えられない時、デフォルト値をとるように。
 
-マニュアルには、
+マニュアルの記載は、
 
 ```racket
 (current-command-line-arguments) → (vectorof (and/c string immutable?))
@@ -236,8 +246,6 @@ timestamp はデータを入れた時間。混同しないように。
 ### new/create, delete, update
 
 [ソースコード](https://github.com/hkim0331/schedule.git) 読むべし。
-
-リリース 1.1.0.
 
 ---
 ### Q &amp; A
