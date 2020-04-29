@@ -3,7 +3,7 @@
 (require (planet dmac/spin))
 (require db)
 
-(define VERSION "1.3.1")
+(define VERSION "1.4.0")
 
 (define DB (sqlite3-connect #:database "schedule.db"))
 
@@ -26,7 +26,7 @@
   input.brief {width: 200px;}
   textarea.detail {width:300px;}
   div.sql {margin-bottom:1ex;}
-  textarea.sql {width:400px;}
+  input.sql {width:400px;}
   div.m2 {margin-left: 2em;}
 </style>
 </head>
@@ -102,27 +102,56 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 
 (define div-sql
   (lambda ()
-    "<div class='sql'>
+    "<hr>
+
+<h3> HMTL </h3>
+<ul>
+<li><a href='/mura'>mura</a></li>
+<li><a href='/kuma'>kuma</a></li>
+<li><a href='/kimu'>kimu</a></li>
+</ul>
+
 <p><a href='/reset' class='btn btn-danger'>Reset DB</a>
 エラーになっても気にすんな。ブラウザのバックで戻って再読み込み💪</p>
 
-<div class='row'>
-  <div class='m2'>
-  <form method='post' action='/sql'>
-  SQL: <textarea name='sql' class='sql'>select * from schedule;</textarea>
-  <input type='submit' value='query' class='btn btn-warning'>
-  </form></div></div>
+<h3>SQL</h3>
+<form method='post' action='/sql'>
+$ <input name='sql' class='sql' value='select * from schedule;'><br>
+<input type='submit' value='query' class='btn btn-warning'>
+</form>
 
-<div class='row'>
-  <div class='m2'>
-  <form method='post' action='/eval'>
+<hr>
+
+<h3>Racket(dmac/spin)</h3>
+
+<form method='post' action='/eval'>
   (query-rows DB &nbsp;\"
-    <textarea name='sql' class='sql'>select * from schedule;</textarea> \"&nbsp;)
+    <input name='sql' class='sql' value='select * from schedule;'>\"&nbsp;)<br>
     <input type='submit' value='eval' class='btn btn-success'>
-  </form></div></div>
+</form>
 
-</div>
 <hr>"))
+
+(get "/mura"
+  (lambda (req)
+    (html
+      (list
+        "<p>Hello, Murakami♗</p>"
+        "<p><a href='/'>back</a>"))))
+
+(get "/kuma"
+  (lambda (req)
+    (html
+      (list
+        "<p>Hello, Kumashiro🐻</p>"
+        "<p><a href='/'>back</a>"))))
+
+(get "/kimu"
+  (lambda (req)
+    (html
+      (list
+        "<p>🍺</p>"
+        "<p><a href='/'>back</a>"))))
 
 (post "/eval"
   (lambda (req)
