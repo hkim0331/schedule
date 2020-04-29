@@ -24,9 +24,10 @@
   p.event {margin-left: 2em;}
   input.date  {width: 200px;}
   input.brief {width: 200px;}
-  textarea.detail {width:300px; height:200px;}
+  textarea.detail {width:300px;}
   div.sql {margin-bottom:1ex;}
   textarea.sql {width:400px;}
+  div.m2 {margin-left: 2em;}
 </style>
 </head>
 <body>
@@ -102,14 +103,42 @@ ha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossori
 (define div-sql
   (lambda ()
     "<div class='sql'>
-<form method='post' action='/sql'>
-<textarea name='sql' class='sql'>select * from schedule;</textarea><br>
-<input type='submit' value='query' class='btn btn-danger'>
-</form><br>
 <p><a href='/reset' class='btn btn-danger'>Reset DB</a>
-エラーになっても気にすんな。ブラウザのバックで戻って再読み込み💪
+エラーになっても気にすんな。ブラウザのバックで戻って再読み込み💪</p>
+
+<div class='row'>
+  <div class='m2'>
+  <form method='post' action='/sql'>
+  SQL: <textarea name='sql' class='sql'>select * from schedule;</textarea>
+  <input type='submit' value='query' class='btn btn-warning'>
+  </form></div></div>
+
+<div class='row'>
+  <div class='m2'>
+  <form method='post' action='/eval'>
+  (query-rows DB &nbsp;\"
+    <textarea name='sql' class='sql'>select * from schedule;</textarea> \"&nbsp;)
+    <input type='submit' value='eval' class='btn btn-success'>
+  </form></div></div>
+
 </div>
 <hr>"))
+
+(post "/eval"
+  (lambda (req)
+    (let ((ret (query-rows DB (params req 'sql))))
+      (if (null? ret)
+        (html
+          (list
+            "<h2>EMPTY</h2>"
+            "<p>🐸<a href='/'>かえる</a>"))
+        (html
+         (list
+          "<h2>RESULT</h2>"
+          "<table>"
+          (tr ret)
+          "</table>"
+          "<p>🐸<a href='/'>かえる</a>"))))))
 
 (post "/sql"
   (lambda (req)
